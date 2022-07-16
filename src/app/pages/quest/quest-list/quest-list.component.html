@@ -1,0 +1,188 @@
+<div class="pt-3">
+  <div class="d-flex align-items-center justify-content-between mb-3 px-3">
+    <div class="flex-fill"></div>
+    <a routerLink="./create" class="btn btn-primary" style="min-width: 120px">
+      <i class="bi bi-plus"></i> Thêm Quest
+    </a>
+  </div>
+  <div class="bg-white m-3 p-3 rounded">
+    <div class="rounded bg-white">
+      <form class="mb-4" [formGroup]="searchForm">
+        <div class="d-flex">
+          <div class="input-group me-3">
+            <span
+              class="input-group-text bg-white border-end-0"
+              id="search-icon"
+              ><i class="bi bi-search"></i
+            ></span>
+            <input
+              type="text"
+              class="border-start-0 form-control outline-none"
+              placeholder="Tìm kiếm khu vực"
+              aria-label="Tìm kiếm khu vực"
+              aria-describedby="search-icon"
+              formControlName="keyword"
+              (keyup.enter)="search$.next(searchForm.value)"
+            />
+          </div>
+          <ng-select
+            [items]="questTypeIds | async"
+            bindValue="id"
+            bindLabel="value"
+            placeholder="Chọn loại quest"
+            [clearable]="false"
+            [closeOnSelect]="true"
+            style="min-width: 200px"
+            class="me-3"
+            formControlName="questTypeIds"
+          ></ng-select>
+          <ng-select
+            [items]="language"
+            bindValue="id"
+            bindLabel="value"
+            [closeOnSelect]="true"
+            style="min-width: 200px"
+            placeholder="Chọn tên phiên bản"
+            class="me-3"
+            formControlName="language"
+          ></ng-select>
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-primary"
+              style="min-width: 120px"
+              (click)="submitSearch$.next(searchForm.value)"
+            >
+              <i class="bi bi-search"></i>
+              Tìm kiếm
+            </button>
+            <button
+              type="button"
+              class="btn btn-default"
+              style="min-width: 100px"
+              (click)="resetSearch$.next()"
+            >
+              <i class="bi bi-x-lg"></i>
+              Reset
+            </button>
+          </div>
+        </div>
+      </form>
+      <!-- table -->
+      <!--  [headerHeight]="45"
+          [footerHeight]="50"
+          [rowHeight]="50" -->
+      <div class="border overflow-hidden rouded shadow-sm">
+        <ngx-datatable
+          class="material rounded"
+          [rows]="areas$ | async"
+          [columns]="columns"
+          columnMode="force"
+          [loadingIndicator]="(loading$ | async) === true"
+          [footerHeight]="50"
+          [rowHeight]="45"
+          [headerHeight]="45"
+          [externalPaging]="true"
+          [externalSorting]="true"
+          [messages]="{
+            emptyMessage: 'Không có quest để hiển thị!',
+            totalMessage: 'quest'
+          }"
+          [count]="(metadata$ | async)?.totalCount || 0"
+          [offset]="((metadata$ | async)?.currentPage || 0) - 1"
+          [limit]="10"
+          (page)="onPage($event)"
+          (sort)="onSort($event)"
+          (activate)="onActivate($event)"
+        >
+          <!-- <ngx-datatable-column
+            [headerCheckboxable]="true"
+            [checkboxable]="true"
+          >
+          </ngx-datatable-column> -->
+        </ngx-datatable>
+      </div>
+    </div>
+    <ng-template #colCreatedAt let-value="value">
+      {{ value | date: "dd/MM/yyyy" }}
+    </ng-template>
+    <ng-template
+      #edit
+      let-row="row"
+      let-expanded="expanded"
+      ngx-datatable-cell-template
+    >
+      <div class="text-left">
+        <a title="Edit" class="mr-2" href="javascript:void(0);">Edit</a>
+        <a title="Delete" href="javascript:void(0);">Delete</a>
+      </div>
+    </ng-template>
+  </div>
+</div>
+<ng-template #formatPrice let-value="value"> {{ value }} vnđ </ng-template>
+<ng-template #formatestimatedTime let-value="value">
+  {{ value }} phút
+</ng-template>
+<ng-template #formatStatus let-value="value">
+  <ng-container *ngIf="value == 'Inactive'">
+    <!-- <i class="bi bi-x-circle" style="color: red; font-size: 18px"></i> -->
+    <span
+      style="
+        background-color: #cb2027;
+        color: #fff;
+        transition: 200ms;
+        padding: 0px 0px;
+        border-radius: 4px;
+        display: inline-block;
+        text-align: center;
+        width: 100px;
+      "
+    >
+      <!-- style="
+        border: 1px solid #dc143c;
+        padding: 5px 18px;
+        color: #fff;
+        border-radius: 5px;
+        background-color: #dc143c;
+        display: inline-block;
+        min-width: 85px !important;
+        min-height: 30px !important;
+        text-align: center;
+        margin: -5px 1px;
+      "
+    > -->
+      InActive
+    </span>
+  </ng-container>
+  <ng-container *ngIf="value == 'Active'">
+    <!-- <i class="bi bi-check2" style="color: '#0EBF00'; font-size: 18px"></i> -->
+    <span
+      style="
+        background: #c2fbd7;
+        color: green;
+        transition: 200ms;
+        padding: 0px 0px;
+        border-radius: 4px;
+        display: inline-block;
+        text-align: center;
+        width: 100px;
+      "
+    >
+      <!-- <span
+      style="
+        border: 1px solid #07bc0c;
+        padding: 5px 18px;
+        color: #fff;
+        border-radius: 5px;
+        background-color: #07bc0c;
+        display: inline-block;
+        min-width: 85px !important;
+        min-height: 30px !important;
+        text-align: center;
+        margin: -5px 1px;
+      "
+    > -->
+      Active
+    </span>
+  </ng-container>
+</ng-template>

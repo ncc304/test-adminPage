@@ -1,0 +1,155 @@
+<router-outlet></router-outlet>
+<div class="bg-white m-3 p-3 rounded">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div class="flex-fill"></div>
+    <!-- <button type="button" class="btn btn-primary" style="min-width:120px;">
+      <i class="bi bi-plus"></i> Thêm vị trí
+    </button> -->
+    <a
+      [routerLink]="['./create']"
+      class="btn btn-primary"
+      style="min-width: 120px"
+    >
+      <i class="bi bi-plus"></i> Thêm địa điểm
+    </a>
+  </div>
+
+  <div class="p-3 rounded bg-white">
+    <form [formGroup]="searchForm" class="mb-4">
+      <div class="d-flex">
+        <div class="input-group me-3">
+          <span class="input-group-text bg-white border-end-0" id="search-icon"
+            ><i class="bi bi-search"></i
+          ></span>
+          <input
+            type="text"
+            class="border-start-0 form-control outline-none"
+            placeholder="Tìm kiếm địa điểm"
+            aria-label="Tìm kiếm địa điểm"
+            aria-describedby="search-icon"
+            formControlName="keyword"
+          />
+        </div>
+        <ng-select
+          [items]="locationTypeIds$ | async"
+          bindValue="id"
+          bindLabel="value"
+          placeholder="Loại địa điểm"
+          [clearable]="false"
+          [closeOnSelect]="true"
+          style="min-width: 175px"
+          class="me-3"
+          formControlName="locationTypeIds"
+        ></ng-select>
+        <ng-select
+          [items]="areaIds$ | async"
+          bindValue="id"
+          bindLabel="value"
+          [closeOnSelect]="true"
+          [multiple]="false"
+          style="min-width: 150px"
+          placeholder="Chọn khu vực"
+          class="me-3"
+          formControlName="areaIds"
+        ></ng-select>
+        <div class="btn-group">
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="min-width: 120px"
+            (click)="submitSearch$.next(searchForm.value)"
+          >
+            <i class="bi bi-search"></i>
+            Tìm kiếm
+          </button>
+          <button
+            type="button"
+            class="btn btn-default"
+            style="min-width: 100px"
+            (click)="resetSearch$.next()"
+          >
+            <i class="bi bi-x-lg"></i>
+            Reset
+          </button>
+        </div>
+      </div>
+    </form>
+    <!-- table -->
+    <div class="border overflow-hidden rouded shadow-sm">
+      <ngx-datatable
+        class="material rounded"
+        [rows]="locations$ | async"
+        [columns]="columns"
+        columnMode="force"
+        [headerHeight]="50"
+        [loadingIndicator]="(loading$ | async) === true"
+        [footerHeight]="50"
+        [rowHeight]="50"
+        [externalPaging]="true"
+        [externalSorting]="true"
+        [messages]="{
+          emptyMessage: 'Không có địa điểm để hiển thị!',
+          totalMessage: 'địa điểm'
+        }"
+        [count]="(metadata$ | async)?.totalCount || 0"
+        [offset]="((metadata$ | async)?.currentPage || 0) - 1"
+        [limit]="10"
+        (page)="onPage($event)"
+        (sort)="onSort($event)"
+      >
+      <ng-template
+      #actionTemplate
+      let-row="row"
+      let-value="value"
+      let-expanded="expanded"
+      ngx-datatable-cell-template
+    >
+      <button
+        class="btn btn-sm me-2"
+        style="
+          color: #fff;
+          background-color: #4caf50;
+          border-color: #4caf50;
+        "
+        type="button"
+        data-toggle="tooltip"
+        data-placement="top"
+        [tooltip]="'Nhấp chuột để cập nhật địa điểm'"
+        title="Edit"
+        (click)="onUpdate(row.id)"
+      >
+        <i class="bi bi-pencil"></i>
+      </button>
+      <button
+        class="btn btn-sm me-2"
+        type="button"
+        [ngStyle]="
+          row.status == 'Deleted'
+            ? {
+                color: '#fff',
+                backgroundColor: '#f44335',
+                borderColor: '#f44335'
+              }
+            : {
+                color: '#fff',
+                backgroundColor: '#f44335',
+                borderColor: '#f44335'
+              }
+        "
+        data-toggle="tooltip"
+        data-placement="top"
+        [tooltip]="
+          row.status == 'Deleted'
+            ? 'Bạn không thể xóa vì địa điểm này đã được xóa trước đây'
+            : 'Nhấp chuột để xóa địa điểm'
+        "
+        (click)="onDelete(row.id)"
+        [disabled]="row.status == 'Deleted' ? true : false"
+      >
+        <i class="bi bi-trash3"></i>
+      </button>
+    </ng-template>
+      </ngx-datatable>
+    </div>
+  </div>
+</div>

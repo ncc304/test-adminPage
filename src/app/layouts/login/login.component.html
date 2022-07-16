@@ -1,0 +1,83 @@
+<section class="vh-100">
+  <div class="container h-100">
+    <div class="row d-flex align-items-center justify-content-center h-50">
+      <form [formGroup]="form" class="col-6">
+        <label><h6>Đăng nhập tài khoản</h6></label>
+        <div class="form-group">
+          <label for="username">Email</label>
+          <input type="text" class="form-control" formControlName="username" />
+        </div>
+        <div class="form-group" class="mb-2">
+          <label for="password">Mật khẩu</label>
+          <input
+            type="password"
+            class="form-control"
+            formControlName="password"
+          />
+        </div>
+        <div>
+          <button type="button" class="btn btn-primary" (click)="onSubmit.next()">
+            Đăng nhập
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <section
+    class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4"
+  >
+    <div class="container">
+      <div class="row justify-content-center">
+        <div
+          class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center"
+        >
+          <div class="d-flex justify-content-center py-4">
+            <h5 class="logo d-flex align-items-center w-auto">
+              <span class="d-none d-lg-block text-uppercase"
+                >City Discovery</span
+              >
+            </h5>
+          </div>
+          <div class="card mb-3">
+            <div class="card-body" style="width: 400px;">
+              <div class="pt-4 pb-2">
+                <h5 class="card-title text-center pb-0 fs-4">
+                  Đăng nhập tài khoản
+                </h5>
+                <p class="text-center small">
+                  Nhập tên đăng nhập và mật khẩu của bạn
+                </p>
+              </div>
+              <form class="row g-3 ng-untouched ng-pristine ng-valid">
+                <div class="col-12">
+                  <label class="form-label">
+                    Tên đăng nhập
+                  </label>
+                  <input type="text" formcontrolname="username" class="form-control ng-untouched ng-pristine ng-valid">
+                </div>
+                <div class="col-12">
+                  <label class="form-label">
+                    Mật khẩu
+                  </label>
+                  <input type="text" formcontrolname="password" class="form-control ng-untouched ng-pristine ng-valid">
+                </div>
+                <div class="col-12 mt-4">
+                  <button class="btn btn-outline-primary w-100 disabled">Đăng nhập</button>
+                </div>
+                <div class="col-12">
+                  <p class="small mb-0">
+                    Quên mật khẩu? 
+                    <a href="./forget-password">Lấy lại mật khẩu mới</a>
+                  </p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
